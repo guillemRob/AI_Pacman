@@ -11,7 +11,6 @@
 # Student side autograding was added by Brad Miller, Nick Hay, and
 # Pieter Abbeel (pabbeel@cs.berkeley.edu).
 
-
 """
 In search.py, you will implement generic search algorithms which are called by
 Pacman agents (in searchAgents.py).
@@ -88,29 +87,27 @@ e
     """
     "*** YOUR CODE HERE ***"
 
+    # Creating lists
     expandedNodes = []
     frontier = []
     firstState = (problem.getStartState(),[])
-
+    # adding the start state to the frontier stack
     frontier.append(firstState)    
     while(True):
         if len(frontier) == 0: return False
+        # destructuring the first element in the frontier stack  
         currentState,action = frontier.pop()
         expandedNodes.append(currentState)
-        if (problem.isGoalState(currentState)): 
-            print(action)  
-            return action
+        if (problem.isGoalState(currentState)): return action
         for i in range (len(problem.getSuccessors(currentState))):
-            sState,sAction = problem.getSuccessors(currentState)[i]
+            sState, sAction, sCost = problem.getSuccessors(currentState)[i]
             if(sState not in frontier and  sState not in expandedNodes ):
                 newAction = action + [sAction]
                 newNode = (sState, newAction)
+                print(newNode,"\n")
                 frontier.append(newNode)
          
     return action
-    # print("Start:", problem.getStartState())
-    # print("Is the start a goal?", problem.isGoalState(problem.getStartState()))
-    # print("Start's successors:", problem.getSuccessors(problem.getStartState()))
     util.raiseNotDefined()
 
 def breadthFirstSearch(problem):
