@@ -17,6 +17,7 @@ Pacman agents (in searchAgents.py).
 """
 
 import util
+import time
 
 class SearchProblem:
     """
@@ -90,20 +91,24 @@ e
     # Creating lists
     expandedNodes = []
     frontier = []
-    firstState = (problem.getStartState(),[])
-    # adding the start state to the frontier stack
+    #Creating the start node, with the start state, list of actions(empty), and the cost 
+    firstState = (problem.getStartState(),[],0)
+    # adding the start node to the frontier stack
     frontier.append(firstState)    
     while(True):
-        if len(frontier) == 0: return False
+        if (len(frontier)) == 0: return false
         # destructuring the first element in the frontier stack  
-        currentState,action = frontier.pop()
+        currentState,action, cost = frontier.pop()
         expandedNodes.append(currentState)
-        if (problem.isGoalState(currentState)): return action
+        if (problem.isGoalState(currentState)):
+            print(cost)
+            return action
         for i in range (len(problem.getSuccessors(currentState))):
             sState, sAction, sCost = problem.getSuccessors(currentState)[i]
             if(sState not in frontier and  sState not in expandedNodes ):
                 newAction = action + [sAction]
-                newNode = (sState, newAction)
+                newCost = cost + sCost
+                newNode = (sState, newAction, newCost)
                 print(newNode,"\n")
                 frontier.append(newNode)
          
@@ -113,6 +118,31 @@ e
 def breadthFirstSearch(problem):
     """Search the shallowest nodes in the search tree first."""
     "*** YOUR CODE HERE ***"
+    # Creating lists
+    expandedNodes = []
+    frontier = []
+    #Creating the start node, with the start state, list of actions(empty), and the cost 
+    firstState = (problem.getStartState(),[],0)
+    # adding the start node to the frontier stack
+    frontier.append(firstState)    
+    while(True):
+        if len(frontier) == 0: return False
+        # destructuring the first element in the frontier stack  
+        currentState,action, cost = frontier.pop()
+        expandedNodes.append(currentState)
+        if (problem.isGoalState(currentState)):
+            print("TOTAL COST: ",cost)
+            return action
+        for i in range (len(problem.getSuccessors(currentState))):
+            sState, sAction, sCost = problem.getSuccessors(currentState)[i]
+            if(sState not in frontier and  sState not in expandedNodes ):
+                newAction = action + [sAction]
+                newCost = cost + sCost
+                newNode = (sState, newAction, newCost)
+                print(newNode,"\n")
+                frontier.insert(0,newNode)
+         
+    return action
     util.raiseNotDefined()
 
 def uniformCostSearch(problem):
