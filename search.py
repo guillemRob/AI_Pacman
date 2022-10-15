@@ -101,7 +101,7 @@ e
         currentState,action, cost = frontier.pop()
         expandedNodes.append(currentState)
         if (problem.isGoalState(currentState)):
-            print(cost)
+            print("TOTAL COST: ",cost)
             return action
         for i in range (len(problem.getSuccessors(currentState))):
             sState, sAction, sCost = problem.getSuccessors(currentState)[i]
