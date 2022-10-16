@@ -109,6 +109,7 @@ e
                 newAction = action + [sAction]
                 newCost = cost + sCost
                 newNode = (sState, newAction, newCost)
+                # time.sleep(1)
                 print(newNode,"\n")
                 frontier.append(newNode)
          
@@ -139,6 +140,7 @@ def breadthFirstSearch(problem):
                 newAction = action + [sAction]
                 newCost = cost + sCost
                 newNode = (sState, newAction, newCost)
+                # time.sleep(1)
                 print(newNode,"\n")
                 frontier.insert(0,newNode)
          
