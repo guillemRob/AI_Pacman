@@ -295,6 +295,16 @@ class CornersProblem(search.SearchProblem):
         space)
         """
         "*** YOUR CODE HERE ***"
+        # check if we are already in a corner 
+        cornersGoal = util.Stack()
+        # if we are in a corner one goal is reached 
+        if self.startingPosition in self.corners:
+            cornersGoal.push(True)
+        index = 4 if cornersGoal.isEmpty() else 3
+        for x in range(index):
+            cornersGoal.push(False)       
+        # return the starting position and the list of bools
+        return (self.startingPosition,cornersGoal.list)
         util.raiseNotDefined()
 
     def isGoalState(self, state):
@@ -302,6 +312,9 @@ class CornersProblem(search.SearchProblem):
         Returns whether this search state is a goal state of the problem.
         """
         "*** YOUR CODE HERE ***"
+        cornersGoal = state[1]
+        return len(cornersGoal)==0  
+        
         util.raiseNotDefined()
 
     def getSuccessors(self, state):
@@ -314,18 +327,30 @@ class CornersProblem(search.SearchProblem):
             state, 'action' is the action required to get there, and 'stepCost'
             is the incremental cost of expanding to that successor
         """
-
         successors = []
         for action in [Directions.NORTH, Directions.SOUTH, Directions.EAST, Directions.WEST]:
             # Add a successor state to the successor list if the action is legal
             # Here's a code snippet for figuring out whether a new position hits a wall:
-            #   x,y = currentPosition
-            #   dx, dy = Actions.directionToVector(action)
-            #   nextx, nexty = int(x + dx), int(y + dy)
-            #   hitsWall = self.walls[nextx][nexty]
+              currentState,cornersGoal = state  
+              x,y = currentState
+              dx, dy = Actions.directionToVector(action)
+              nextx, nexty = int(x + dx), int(y + dy)
+              hitsWall = self.walls[nextx][nexty]
+              if not hitsWall:
+                # saving the next state
+                newState = (nextx,nexty)
+                cost = 1
+                # print(self.corners.index(state))
+                if((1,1) in self.corners):
+                    index = self.corners.index(newState)
+                    print(self.corners)
 
-            "*** YOUR CODE HERE ***"
-
+                    cornersGoal.pop()
+                
+                newNode = (newState,cornersGoal)    
+                successors.append((newNode,action,cost))
+                # print(successors)
+        # print(successors,"\n")
         self._expanded += 1 # DO NOT CHANGE
         return successors
 
