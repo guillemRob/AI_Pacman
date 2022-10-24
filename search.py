@@ -92,28 +92,27 @@ e
     expandedNodes = []
     frontier = util.Stack()
     #Creating the start node, with the start state, list of actions(empty), and the cost 
-    firstState = (problem.getStartState(),[],0)
+    firstState = (problem.getStartState(),[],1)
     # adding the start node to the frontier stack
     frontier.push(firstState)  
-    while(True):
-        if frontier.isEmpty() == True: return false
+    while(not frontier.isEmpty()):
+        if frontier.isEmpty() == True: return False
         # destructuring the first element in the frontier stack  
-        currentState,action, cost = frontier.pop()
-        expandedNodes.append(currentState)
-        if (problem.isGoalState(currentState)):
-            # print("TOTAL COST: ",cost)
-            return action
-        for i in range (len(problem.getSuccessors(currentState))):
-            sState, sAction, sCost = problem.getSuccessors(currentState)[i]
-            if(sState not in frontier.list and  sState not in expandedNodes ):
-                newAction = action + [sAction]
-                newCost = cost + sCost
-                newNode = (sState, newAction, newCost)
-                # time.sleep(1)
-                # print(newNode,"\n")
-                frontier.push(newNode)
+        currentState,action,cost= frontier.pop()
+       
+        if (problem.isGoalState(currentState)): return action   
+        if currentState not in expandedNodes:
+            expandedNodes.append(currentState)
+            succesors = problem.getSuccessors(currentState)
+            cont = 0
+            for succ in succesors:        
+                sState, sAction ,sCost = succ
+                if(sState not in expandedNodes and sState not in frontier.list):
+                    newAction = action + [sAction]
+                    newCost = cost + sCost
+                    newNode = (sState, newAction,newCost)
+                    frontier.push(newNode)
          
-    return action
     util.raiseNotDefined()
 
 def breadthFirstSearch(problem):
@@ -126,25 +125,23 @@ def breadthFirstSearch(problem):
     firstState = (problem.getStartState(),[],0)
     # adding the start node to the frontier stack
     frontier.push(firstState)    
-    while(True):
+    while(not frontier.isEmpty()):
         if frontier.isEmpty() == True: return False
         # destructuring the first element in the frontier stack  
         currentState,action, cost = frontier.pop()
-        expandedNodes.append(currentState)
-        if (problem.isGoalState(currentState)):
-            # print("TOTAL COST: ",cost)
-            return action
-        for i in range (len(problem.getSuccessors(currentState))):
-            sState, sAction, sCost = problem.getSuccessors(currentState)[i]
-            if(sState not in frontier.list and  sState not in expandedNodes ):
-                newAction = action + [sAction]
-                newCost = cost + sCost
-                newNode = (sState, newAction, newCost)
-                # time.sleep(1)
-                # print(newNode,"\n")
-                frontier.push(newNode)
+        if (problem.isGoalState(currentState)): return action
+        if currentState not in expandedNodes:
+            expandedNodes.append(currentState)
+            succesors = problem.getSuccessors(currentState)
+
+            for succ in succesors:
+                sState, sAction, sCost = succ
+                if(sState not in frontier.list and  sState not in expandedNodes ):
+                    newAction = action + [sAction]
+                    newCost = cost + sCost
+                    newNode = (sState, newAction, newCost)
+                    frontier.push(newNode)
          
-    return action
     util.raiseNotDefined()
 
 def uniformCostSearch(problem):
@@ -155,26 +152,23 @@ def uniformCostSearch(problem):
     firstState = (problem.getStartState(),[],0)
     frontier.push(firstState,0)    
     # print(frontier.heap)
-    while(True):
+    while(not frontier.isEmpty()):
         if frontier.isEmpty() == True: return False
         # destructuring the first element in the frontier stack  
         currentState,action, cost = frontier.pop()
-        if (problem.isGoalState(currentState)):
-            print("TOTAL COST: ",cost)
-            return action
-        expandedNodes.append(currentState)
-        for i in range (len(problem.getSuccessors(currentState))):            
-            sState, sAction, sCost = problem.getSuccessors(currentState)[i]                    
-            if(sState not in frontier.heap and  sState not in expandedNodes ):   
-                newAction = action + [sAction]
-                newCost = cost + sCost
-                newNode = (sState, newAction, newCost)    
-                # print(frontier.heap,"\n")         
-                frontier.push(newNode,newCost)
-
-        
+        if (problem.isGoalState(currentState)): return action
+        if currentState not in expandedNodes:
+            expandedNodes.append(currentState)
+            succesors = problem.getSuccessors(currentState)
+            for succ in succesors:            
+                sState, sAction, sCost = succ                    
+                if(sState not in frontier.heap and  sState not in expandedNodes ):   
+                    newAction = action + [sAction]
+                    newCost = cost + sCost
+                    newNode = (sState, newAction, newCost)    
+                    frontier.push(newNode,problem.getCostOfActions(newCost))
+    
          
-    return action
     util.raiseNotDefined()
 
 def nullHeuristic(state, problem=None):
@@ -192,24 +186,22 @@ def aStarSearch(problem, heuristic=nullHeuristic):
     firstState = (problem.getStartState(),[],0)
     frontier.push(firstState,0)    
     # print(frontier.heap)
-    while(True):
+    while(not frontier.isEmpty()):
         if frontier.isEmpty() == True: return False
         # destructuring the first element in the frontier stack  
         currentState,action, cost = frontier.pop()
-        if (problem.isGoalState(currentState)):
-            print("TOTAL COST: ",cost)
-            return action
-        expandedNodes.append(currentState)
-        for i in range (len(problem.getSuccessors(currentState))):            
-            sState, sAction, sCost = problem.getSuccessors(currentState)[i]                    
-            if(sState not in frontier.heap and  sState not in expandedNodes ):   
-                newAction = action + [sAction]
-                newCost = cost + sCost
-                totalCost = newCost + heuristic(sState,problem)
-                newNode = (sState, newAction, totalCost)    
-                # print(frontier.heap,"\n")         
-                frontier.push(newNode,totalCost)     
-    return action
+        if (problem.isGoalState(currentState)): return action
+        if currentState not in expandedNodes:
+            expandedNodes.append(currentState)
+            succesors = problem.getSuccessors(currentState)
+            for succ in succesors:            
+                sState, sAction, sCost = succ                    
+                if(sState not in frontier.heap and  sState not in expandedNodes ):   
+                    newAction = action + [sAction]
+                    newCost = cost + sCost
+                    totalCost = newCost + heuristic(sState,problem)
+                    newNode = (sState, newAction, totalCost)    
+                    frontier.push(newNode,totalCost)     
     util.raiseNotDefined()
 
 
