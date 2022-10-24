@@ -304,6 +304,7 @@ class CornersProblem(search.SearchProblem):
         for x in range(index):
             cornersGoal.push(False)       
         # return the starting position and the list of bools
+        print(cornersGoal.list)
         return (self.startingPosition,cornersGoal.list)
         util.raiseNotDefined()
 
@@ -313,7 +314,12 @@ class CornersProblem(search.SearchProblem):
         """
         "*** YOUR CODE HERE ***"
         cornersGoal = state[1]
-        return len(cornersGoal)==0  
+        cont = 0;
+        # check if all 4 corners already visited
+        for x in range(len(cornersGoal)):
+            if(cornersGoal[x]):
+                 cont += 1
+        return cont==4
         
         util.raiseNotDefined()
 
@@ -336,21 +342,22 @@ class CornersProblem(search.SearchProblem):
               dx, dy = Actions.directionToVector(action)
               nextx, nexty = int(x + dx), int(y + dy)
               hitsWall = self.walls[nextx][nexty]
+              # viable paths
               if not hitsWall:
                 # saving the next state
                 newState = (nextx,nexty)
                 cost = 1
-                # print(self.corners.index(state))
-                if((1,1) in self.corners):
+                # if next state is goal
+                if((newState) in self.corners):
                     index = self.corners.index(newState)
-                    print(self.corners)
-
-                    cornersGoal.pop()
-                
+                    cornersTemp = []
+                    # iterate to swap from false to true index of corner visited
+                    for i in range(len(cornersGoal)):
+                        cornersTemp.append(True) if i == index else cornersTemp.append(cornersGoal[i])
+                    cornersGoal = cornersTemp
+                # crafting new node and appending to successors    
                 newNode = (newState,cornersGoal)    
                 successors.append((newNode,action,cost))
-                # print(successors)
-        # print(successors,"\n")
         self._expanded += 1 # DO NOT CHANGE
         return successors
 

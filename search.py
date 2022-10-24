@@ -101,7 +101,7 @@ e
         currentState,action, cost = frontier.pop()
         expandedNodes.append(currentState)
         if (problem.isGoalState(currentState)):
-            print("TOTAL COST: ",cost)
+            # print("TOTAL COST: ",cost)
             return action
         for i in range (len(problem.getSuccessors(currentState))):
             sState, sAction, sCost = problem.getSuccessors(currentState)[i]
@@ -110,7 +110,7 @@ e
                 newCost = cost + sCost
                 newNode = (sState, newAction, newCost)
                 # time.sleep(1)
-                print(newNode,"\n")
+                # print(newNode,"\n")
                 frontier.push(newNode)
          
     return action
@@ -132,7 +132,7 @@ def breadthFirstSearch(problem):
         currentState,action, cost = frontier.pop()
         expandedNodes.append(currentState)
         if (problem.isGoalState(currentState)):
-            print("TOTAL COST: ",cost)
+            # print("TOTAL COST: ",cost)
             return action
         for i in range (len(problem.getSuccessors(currentState))):
             sState, sAction, sCost = problem.getSuccessors(currentState)[i]
@@ -141,7 +141,7 @@ def breadthFirstSearch(problem):
                 newCost = cost + sCost
                 newNode = (sState, newAction, newCost)
                 # time.sleep(1)
-                print(newNode,"\n")
+                # print(newNode,"\n")
                 frontier.push(newNode)
          
     return action
@@ -169,7 +169,7 @@ def uniformCostSearch(problem):
                 newAction = action + [sAction]
                 newCost = cost + sCost
                 newNode = (sState, newAction, newCost)    
-                print(frontier.heap,"\n")         
+                # print(frontier.heap,"\n")         
                 frontier.push(newNode,newCost)
 
         
