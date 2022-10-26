@@ -96,10 +96,8 @@ e
     # adding the start node to the frontier stack
     frontier.push(firstState)  
     while(not frontier.isEmpty()):
-        if frontier.isEmpty() == True: return False
         # destructuring the first element in the frontier stack  
-        currentState,action,cost= frontier.pop()
-       
+        currentState,action,cost= frontier.pop()       
         if (problem.isGoalState(currentState)): return action   
         if currentState not in expandedNodes:
             expandedNodes.append(currentState)
@@ -126,7 +124,6 @@ def breadthFirstSearch(problem):
     # adding the start node to the frontier stack
     frontier.push(firstState)    
     while(not frontier.isEmpty()):
-        if frontier.isEmpty() == True: return False
         # destructuring the first element in the frontier stack  
         currentState,action, cost = frontier.pop()
         if (problem.isGoalState(currentState)): return action
@@ -153,8 +150,7 @@ def uniformCostSearch(problem):
     frontier.push(firstState,0)    
     # print(frontier.heap)
     while(not frontier.isEmpty()):
-        if frontier.isEmpty() == True: return False
-        # destructuring the first element in the frontier stack  
+        # destructuring the first element in the frontier stack          
         currentState,action, cost = frontier.pop()
         if (problem.isGoalState(currentState)): return action
         if currentState not in expandedNodes:
@@ -166,7 +162,7 @@ def uniformCostSearch(problem):
                     newAction = action + [sAction]
                     newCost = cost + sCost
                     newNode = (sState, newAction, newCost)    
-                    frontier.push(newNode,problem.getCostOfActions(newCost))
+                    frontier.push(newNode,newCost)
     
          
     util.raiseNotDefined()
@@ -183,13 +179,14 @@ def aStarSearch(problem, heuristic=nullHeuristic):
     "*** YOUR CODE HERE ***"
     expandedNodes = []
     frontier = util.PriorityQueue()
-    firstState = (problem.getStartState(),[],0)
+    heuristicCost = heuristic(problem.getStartState(),problem)
+    firstState = (problem.getStartState(),[],heuristicCost)
+
     frontier.push(firstState,0)    
     # print(frontier.heap)
     while(not frontier.isEmpty()):
-        if frontier.isEmpty() == True: return False
         # destructuring the first element in the frontier stack  
-        currentState,action, cost = frontier.pop()
+        currentState,action, cost  = frontier.pop()
         if (problem.isGoalState(currentState)): return action
         if currentState not in expandedNodes:
             expandedNodes.append(currentState)
@@ -198,9 +195,9 @@ def aStarSearch(problem, heuristic=nullHeuristic):
                 sState, sAction, sCost = succ                    
                 if(sState not in frontier.heap and  sState not in expandedNodes ):   
                     newAction = action + [sAction]
-                    newCost = cost + sCost
+                    newCost = problem.getCostOfActions(newAction)
                     totalCost = newCost + heuristic(sState,problem)
-                    newNode = (sState, newAction, totalCost)    
+                    newNode = (sState, newAction,totalCost)    
                     frontier.push(newNode,totalCost)     
     util.raiseNotDefined()
 

@@ -304,7 +304,6 @@ class CornersProblem(search.SearchProblem):
         for x in range(index):
             cornersGoal.push(False)       
         # return the starting position and the list of bools
-        print(cornersGoal.list)
         return (self.startingPosition,cornersGoal.list)
         util.raiseNotDefined()
 
@@ -390,8 +389,40 @@ def cornersHeuristic(state, problem):
     """
     corners = problem.corners # These are the corner coordinates
     walls = problem.walls # These are the walls of the maze, as a Grid (game.py)
+    
 
     "*** YOUR CODE HERE ***"
+    startPosition = state[0] 
+    
+    # choose an arbitrary corner to use it as a reference and find the closest corner to the agent
+    minDistCorn = corners[0]
+    minDistToCorn = abs(startPosition[0] - minDistCorn[0]) + abs(startPosition[1] - minDistCorn[1])
+
+    for corner in corners:
+        cornerPos = corner
+        distance = abs(startPosition[0] - cornerPos[0]) + abs(startPosition[1] - cornerPos[1])
+        if(distance < minDistToCorn):
+            minDistToCorn = distance
+            minDistCorn = cornerPos
+    
+    # need to convert the tuple of corners to a list so then we can remove one item
+    cornList = list(corners)
+    cornList.remove(minDistCorn)
+
+    # find which corner is the closest to the previous one, so from the corner we are #we can go to the one near to us. 
+    while len(cornList) > 0:
+      dist = 999999
+      cn = []
+      for corner in cornList:
+          tmpDist = abs(corner[0] - minDistCorn[0]) + abs(corner[1] - minDistCorn[1])
+          if(dist > tmpDist):
+              dist = tmpDist
+              cn = corner 
+      minDistToCorn += dist
+      minDistCorn = cn
+      cornList.remove(cn)
+
+    return minDistToCorn
     return 0 # Default to trivial solution
 
 class AStarCornersAgent(SearchAgent):
