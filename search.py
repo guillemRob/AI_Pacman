@@ -102,9 +102,8 @@ e
         if currentState not in expandedNodes:
             expandedNodes.append(currentState)
             succesors = problem.getSuccessors(currentState)
-            cont = 0
-            for succ in succesors:        
-                sState, sAction ,sCost = succ
+            for succ in succesors:
+                sState,sAction,sCost = succ   
                 if(sState not in expandedNodes and sState not in frontier.list):
                     newAction = action + [sAction]
                     newCost = cost + sCost
@@ -191,12 +190,15 @@ def aStarSearch(problem, heuristic=nullHeuristic):
         if currentState not in expandedNodes:
             expandedNodes.append(currentState)
             succesors = problem.getSuccessors(currentState)
+            # print("h(n): ",heuristic(currentState,problem),"<=" )
             for succ in succesors:            
                 sState, sAction, sCost = succ                    
                 if(sState not in frontier.heap and  sState not in expandedNodes ):   
                     newAction = action + [sAction]
                     newCost = problem.getCostOfActions(newAction)
                     totalCost = newCost + heuristic(sState,problem)
+                    # print("c: ",problem.getCostOfActions(newAction),"h(p)",heuristic(sState,problem),"state",sState,"\n\n" )
+                    # time.sleep(1)
                     newNode = (sState, newAction,totalCost)    
                     frontier.push(newNode,totalCost)     
     util.raiseNotDefined()

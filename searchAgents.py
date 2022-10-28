@@ -374,58 +374,6 @@ class CornersProblem(search.SearchProblem):
         return len(actions)
 
 
-# def cornersHeuristic(state, problem):
-#     """
-#     A heuristic for the CornersProblem that you defined.
-
-#       state:   The current search state
-#                (a data structure you chose in your search problem)
-
-#       problem: The CornersProblem instance for this layout.
-
-#     This function should always return a number that is a lower bound on the
-#     shortest path from the state to a goal of the problem; i.e.  it should be
-#     admissible (as well as consistent).
-#     """
-#     corners = problem.corners # These are the corner coordinates
-#     walls = problem.walls # These are the walls of the maze, as a Grid (game.py)
-    
-
-#     "*** YOUR CODE HERE ***"
-#     startPosition = state[0] 
-    
-#     # choose an arbitrary corner to use it as a reference and find the closest corner to the agent
-#     minDistCorn = corners[0]
-#     minDistToCorn = abs(startPosition[0] - minDistCorn[0]) + abs(startPosition[1] - minDistCorn[1])
-
-#     for corner in corners:
-#         cornerPos = corner
-#         distance = abs(startPosition[0] - cornerPos[0]) + abs(startPosition[1] - cornerPos[1])
-#         if(distance < minDistToCorn):
-#             minDistToCorn = distance
-#             minDistCorn = cornerPos
-    
-#     # need to convert the tuple of corners to a list so then we can remove one item
-#     cornList = list(corners)
-#     cornList.remove(minDistCorn)
-
-#     # find which corner is the closest to the previous one, so from the corner we are #we can go to the one near to us. 
-#     while len(cornList) > 0:
-#       dist = 999999
-#       cn = []
-#       for corner in cornList:
-#           tmpDist = abs(corner[0] - minDistCorn[0]) + abs(corner[1] - minDistCorn[1])
-#           if(dist > tmpDist):
-#               dist = tmpDist
-#               cn = corner 
-#       minDistToCorn += dist
-#       minDistCorn = cn
-#       cornList.remove(cn)
-
-#     return minDistToCorn
-#     return 0 # Default to trivial solution
-
-
 
 def cornersHeuristic(state, problem):
     """
@@ -454,14 +402,14 @@ def cornersHeuristic(state, problem):
         if(not cornersObj[key]):
             unvisitedCorners.append(key)            # if coord is false add it to unvisitedCorners list
 
-    if len(unvisitedCorners) is 0:                  # if list is empty return 0
+    if len(unvisitedCorners) == 0:                  # if list is empty return 0
         return 0
 
     heuristic = 0
     while len(unvisitedCorners) > 0:
         distanceToCorner = 9999
         for i in range(len(unvisitedCorners)):  #iterate unvisited corners
-            dist= util.manhattanDistance(currentState, unvisitedCorners[i]) #calc manhatan distance from current state to each corner
+            dist = util.manhattanDistance(currentState, unvisitedCorners[i]) #calc manhatan distance from current state to each corner
             if dist < distanceToCorner:     
                 closeCorner = unvisitedCorners[i]   #asign to closed corner the closest one from unvisited corners
                 distanceToCorner = dist             #update distance to corner
@@ -560,9 +508,30 @@ def foodHeuristic(state, problem):
     Subsequent calls to this heuristic can access
     problem.heuristicInfo['wallCount']
     """
-    position, foodGrid = state
-    "*** YOUR CODE HERE ***"
-    return 0
+
+    
+
+    currentState, cornersGoal = state #Save currentstate in the list of bools corners
+    unvisitedCorners = cornersGoal.asList()
+    # print(unvisitedCorners)
+
+
+    if len(unvisitedCorners) == 0:                  # if list is empty return 0
+        return 0
+
+    heuristic = 0
+    while len(unvisitedCorners) > 0:
+        distanceToCorner = 9999
+        for i in range(len(unvisitedCorners)):  #iterate unvisited corners
+            # print(currentState,"----------",unvisitedCorners,"----------",util.manhattanDistance(currentState, unvisitedCorners[i]))
+            dist = mazeDistance(currentState, unvisitedCorners[i],problem) #calc manhatan distance from current state to each corner
+            if dist < distanceToCorner:     
+                closeCorner = unvisitedCorners[i]   #asign to closed corner the closest one from unvisited corners
+                distanceToCorner = dist             #update distance to corner
+        heuristic += distanceToCorner               # add distance to corner to heuristic value         
+        currentState = closeCorner                  #update current state
+        unvisitedCorners.remove(closeCorner)        #remoce closed corner from unvisited corners 
+    return heuristic
 
 class ClosestDotSearchAgent(SearchAgent):
     "Search for all food using a sequence of searches"
