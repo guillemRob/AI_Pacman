@@ -4,7 +4,7 @@
 # educational purposes provided that (1) you do not distribute or publish
 # solutions, (2) you retain this notice, and (3) you provide clear
 # attribution to UC Berkeley, including a link to http://ai.berkeley.edu.
-# 
+#
 # Attribution Information: The Pacman AI projects were developed at UC Berkeley.
 # The core projects and autograders were primarily created by John DeNero
 # (denero@cs.berkeley.edu) and Dan Klein (klein@cs.berkeley.edu).
@@ -18,6 +18,7 @@ Pacman agents (in searchAgents.py).
 
 import util
 import time
+
 
 class SearchProblem:
     """
@@ -68,103 +69,124 @@ def tinyMazeSearch(problem):
     sequence of moves will be incorrect, so only use this for tinyMaze.
     """
     from game import Directions
+
     s = Directions.SOUTH
     w = Directions.WEST
-    return  [s, s, w, s, w, w, s, w]
+    return [s, s, w, s, w, w, s, w]
+
 
 def depthFirstSearch(problem):
     """
-    Search the deepest nodes in the search tree first.
-e
-    Your search algorithm needs to return a list of actions that reaches the
-    goal. Make sure to implement a graph search algorithm.
+        Search the deepest nodes in the search tree first.
+    e
+        Your search algorithm needs to return a list of actions that reaches the
+        goal. Make sure to implement a graph search algorithm.
 
-    To get started, you might want to try some of these simple commands to
-    understand the search problem that is being passed in:
+        To get started, you might want to try some of these simple commands to
+        understand the search problem that is being passed in:
 
-    print("Start:", problem.getStartState())
-    print("Is the start a goal?", problem.isGoalState(problem.getStartState()))
-    print("Start's successors:", problem.getSuccessors(problem.getStartState()))
+        print("Start:", problem.getStartState())
+        print("Is the start a goal?", problem.isGoalState(problem.getStartState()))
+        print("Start's successors:", problem.getSuccessors(problem.getStartState()))
     """
     "*** YOUR CODE HERE ***"
 
-    # Creating lists
+    # Creating list and stack
     expandedNodes = []
     frontier = util.Stack()
-    #Creating the start node, with the start state, list of actions(empty), and the cost 
-    firstState = (problem.getStartState(),[],1)
+    # Creating the start node, with the start state, list of actions(empty), and the cost
+    firstState = (problem.getStartState(), [], 1)
     # adding the start node to the frontier stack
-    frontier.push(firstState)  
-    while(not frontier.isEmpty()):
-        # destructuring the first element in the frontier stack  
-        currentState,action,cost= frontier.pop()       
-        if (problem.isGoalState(currentState)): return action   
+    frontier.push(firstState)
+    while not frontier.isEmpty():
+        # destructuring the first element in the frontier stack
+        currentState, action, cost = frontier.pop()
+        if problem.isGoalState(currentState):
+            return action  # if goal is reached return list of actions
         if currentState not in expandedNodes:
+            # append current state to expandednodes if not in
             expandedNodes.append(currentState)
+            # get succesors of current state
             succesors = problem.getSuccessors(currentState)
-            for succ in succesors:
-                sState,sAction,sCost = succ   
-                if(sState not in expandedNodes and sState not in frontier.list):
+            for succ in succesors:  # iterate each succesor
+                sState, sAction, sCost = succ  # get state,list of actions and cost
+                if sState not in frontier.list:
+                    # append action to list of actions
                     newAction = action + [sAction]
-                    newCost = cost + sCost
-                    newNode = (sState, newAction,newCost)
-                    frontier.push(newNode)
-         
+                    newNode = (sState, newAction, problem.getCostOfActions(
+                        newAction))  # create new node,
+                    frontier.push(newNode)  # push to frontier
+
     util.raiseNotDefined()
+
 
 def breadthFirstSearch(problem):
     """Search the shallowest nodes in the search tree first."""
     "*** YOUR CODE HERE ***"
-    # Creating lists
+    # Creating list and queue
     expandedNodes = []
     frontier = util.Queue()
-    #Creating the start node, with the start state, list of actions(empty), and the cost 
-    firstState = (problem.getStartState(),[],0)
-    # adding the start node to the frontier stack
-    frontier.push(firstState)    
-    while(not frontier.isEmpty()):
-        # destructuring the first element in the frontier stack  
-        currentState,action, cost = frontier.pop()
-        if (problem.isGoalState(currentState)): return action
+    # Creating the start node, with the start state, list of actions(empty), and the cost
+    firstState = (problem.getStartState(), [], 0)
+    # adding the start node to the frontier queue
+    frontier.push(firstState)
+    while not frontier.isEmpty():
+        # destructuring the first element in the frontier stack
+        currentState, action, cost = frontier.pop()
+        if problem.isGoalState(currentState):
+            return action
         if currentState not in expandedNodes:
+            # append current state to expandednodes if not in
             expandedNodes.append(currentState)
+            # get succesors of current state
             succesors = problem.getSuccessors(currentState)
-
             for succ in succesors:
                 sState, sAction, sCost = succ
-                if(sState not in frontier.list and  sState not in expandedNodes ):
+                if sState not in frontier.list:
+                    # append action to list of actions
                     newAction = action + [sAction]
-                    newCost = cost + sCost
-                    newNode = (sState, newAction, newCost)
+                    # create new node,
+                    newNode = (sState, newAction,
+                               problem.getCostOfActions(newAction))
+                    # push to frontier
                     frontier.push(newNode)
-         
+
     util.raiseNotDefined()
+
 
 def uniformCostSearch(problem):
     """Search the node of least total cost first."""
     "*** YOUR CODE HERE ***"
+    # Creating list and priorityqueue
     expandedNodes = []
     frontier = util.PriorityQueue()
-    firstState = (problem.getStartState(),[],0)
-    frontier.push(firstState,0)    
-    # print(frontier.heap)
-    while(not frontier.isEmpty()):
-        # destructuring the first element in the frontier stack          
-        currentState,action, cost = frontier.pop()
-        if (problem.isGoalState(currentState)): return action
+    # Creating the start node, with the start state, list of actions(empty), and the cost
+    firstState = (problem.getStartState(), [], 0)
+    # adding the start node to the frontier queue
+    frontier.push(firstState, 0)
+    while not frontier.isEmpty():
+        # destructuring the first element in the frontier stack
+        currentState, action, cost = frontier.pop()
+        if problem.isGoalState(currentState):
+            return action
         if currentState not in expandedNodes:
+            # append current state to expandednodes if not in
             expandedNodes.append(currentState)
+            # get succesors of current state
             succesors = problem.getSuccessors(currentState)
-            for succ in succesors:            
-                sState, sAction, sCost = succ                    
-                if(sState not in frontier.heap and  sState not in expandedNodes ):   
+            for succ in succesors:
+                sState, sAction, sCost = succ
+                if sState not in frontier.heap:
+                    # append action to list of actions
                     newAction = action + [sAction]
-                    newCost = cost + sCost
-                    newNode = (sState, newAction, newCost)    
-                    frontier.push(newNode,newCost)
-    
-         
+                    newCost = problem.getCostOfActions(newAction)
+                    # create new node
+                    newNode = (sState, newAction, newCost)
+                    # push to frontier
+                    frontier.push(newNode, newCost)
+
     util.raiseNotDefined()
+
 
 def nullHeuristic(state, problem=None):
     """
@@ -173,34 +195,41 @@ def nullHeuristic(state, problem=None):
     """
     return 0
 
+
 def aStarSearch(problem, heuristic=nullHeuristic):
     """Search the node that has the lowest combined cost and heuristic first."""
     "*** YOUR CODE HERE ***"
+    # Creating list and priorityqueue
     expandedNodes = []
     frontier = util.PriorityQueue()
-    heuristicCost = heuristic(problem.getStartState(),problem)
-    firstState = (problem.getStartState(),[],heuristicCost)
-
-    frontier.push(firstState,0)    
-    # print(frontier.heap)
-    while(not frontier.isEmpty()):
-        # destructuring the first element in the frontier stack  
-        currentState,action, cost  = frontier.pop()
-        if (problem.isGoalState(currentState)): return action
+    # initialize heuristic
+    heuristicCost = heuristic(problem.getStartState(), problem)
+    # Creating the start node, with the start state, list of actions(empty), and the heuristic cost
+    firstState = (problem.getStartState(), [], heuristicCost)
+    # adding the start node to the frontier queue
+    frontier.push(firstState, 0)
+    while not frontier.isEmpty():
+        # destructuring the first element in the frontier stack
+        currentState, action, cost = frontier.pop()
+        if problem.isGoalState(currentState):
+            return action
         if currentState not in expandedNodes:
+            # append current state to expandednodes if not in
             expandedNodes.append(currentState)
+            # get succesors of current state
             succesors = problem.getSuccessors(currentState)
-            # print("h(n): ",heuristic(currentState,problem),"<=" )
-            for succ in succesors:            
-                sState, sAction, sCost = succ                    
-                if(sState not in frontier.heap and  sState not in expandedNodes ):   
+            for succ in succesors:
+                sState, sAction, sCost = succ
+                if sState not in frontier.heap:
+                    # append action to list of actions
                     newAction = action + [sAction]
                     newCost = problem.getCostOfActions(newAction)
-                    totalCost = newCost + heuristic(sState,problem)
-                    # print("c: ",problem.getCostOfActions(newAction),"h(p)",heuristic(sState,problem),"state",sState,"\n\n" )
-                    # time.sleep(1)
-                    newNode = (sState, newAction,totalCost)    
-                    frontier.push(newNode,totalCost)     
+                    # cualculate f(n) = g(n) + h(n)
+                    totalCost = newCost + heuristic(sState, problem)
+                    # create new node
+                    newNode = (sState, newAction, totalCost)
+                    # push to frontier
+                    frontier.push(newNode, totalCost)
     util.raiseNotDefined()
 
 
