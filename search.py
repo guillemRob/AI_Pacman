@@ -110,7 +110,7 @@ def depthFirstSearch(problem):
             succesors = problem.getSuccessors(currentState)
             for succ in succesors:  # iterate each succesor
                 sState, sAction, sCost = succ  # get state,list of actions and cost
-                if sState not in frontier.list:
+                if sState not in frontier.list and sState not in expandedNodes:
                     # append action to list of actions
                     newAction = action + [sAction]
                     newNode = (sState, newAction, problem.getCostOfActions(
@@ -142,7 +142,7 @@ def breadthFirstSearch(problem):
             succesors = problem.getSuccessors(currentState)
             for succ in succesors:
                 sState, sAction, sCost = succ
-                if sState not in frontier.list:
+                if sState not in frontier.list and sState not in expandedNodes:
                     # append action to list of actions
                     newAction = action + [sAction]
                     # create new node,
@@ -176,7 +176,7 @@ def uniformCostSearch(problem):
             succesors = problem.getSuccessors(currentState)
             for succ in succesors:
                 sState, sAction, sCost = succ
-                if sState not in frontier.heap:
+                if sState not in frontier.heap and sState not in expandedNodes:
                     # append action to list of actions
                     newAction = action + [sAction]
                     newCost = problem.getCostOfActions(newAction)
@@ -220,7 +220,7 @@ def aStarSearch(problem, heuristic=nullHeuristic):
             succesors = problem.getSuccessors(currentState)
             for succ in succesors:
                 sState, sAction, sCost = succ
-                if sState not in frontier.heap:
+                if sState not in frontier.heap and sState not in expandedNodes:
                     # append action to list of actions
                     newAction = action + [sAction]
                     newCost = problem.getCostOfActions(newAction)
