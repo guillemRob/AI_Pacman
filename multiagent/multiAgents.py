@@ -84,8 +84,8 @@ class ReflexAgent(Agent):
         distance = 0
 
         # if ghost is close to pacman return low score
-        for state in newGhostStates:
-            if state.getPosition() == newPos:
+        for ghost in newGhostStates:
+            if ghost.getPosition() == newPos:
                 return -99999
 
         # return negative distance of closest point to food
